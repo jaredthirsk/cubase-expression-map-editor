@@ -1,9 +1,12 @@
 # cubase-expression-map-editor
 Cubase Expression Map Editor: a limited editor for automating a few parts of creating expression maps.  See instructions to get an idea of what is automated.
 
+## How to run
+
+There's no binary.  So open this in Visual Studio 2022 Preview (free download) or newer (or a Visual Studio 2019 Preview, but it must support .NET 6 Preview 6), Build the solution, right click ExpressionMapEditor6.WinUI, Set as Startup Project, and run.
+
 ## Instructions
 
-In Cubase:
 1. In Cubase: Create groups for your expression map
 1. In Cubase: Create articulations for your expression map, and fill in all the groups.  Skip the name. (Leave name as Slot 123, etc.)
 1. In Cubase: Save your .expressionmap file to disk
@@ -20,3 +23,4 @@ That's it!  A lot more could be automated, and more error checks could be added,
 
  - If you remove all notes in an articulation and save, Cubase will only load part of the .expressionmap.  DATA LOSS!  The problem is Cubase doesn't load self-closing XML elements.  So there needs to be a search and replace of 
  <list name="obj" type="obj" /> with <list name="obj" type="obj"></list>, and then try loading again in Cubase and all the articulations should load.
+ 
