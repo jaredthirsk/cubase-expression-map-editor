@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "ExpressionMapEditor6.WinUI": {
+      "commandName": "MsixPackage"
+    }
+  }
+}

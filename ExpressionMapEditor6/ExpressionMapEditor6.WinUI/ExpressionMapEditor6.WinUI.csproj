@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+	<PropertyGroup>
+		<TargetFrameworks>net6.0-windows10.0.19041</TargetFrameworks>
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+		<OutputType>WinExe</OutputType>
+		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+		<UseMaui>true</UseMaui>
+		<SingleProject>true</SingleProject>
+		<RootNamespace>ExpressionMapEditor6</RootNamespace>
+
+		<!-- Required - Enable Single Project for WinUI -->
+		<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
+		<WindowsPackageType>MSIX</WindowsPackageType>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<!-- App Icon -->
+		<MauiImage Include="..\ExpressionMapEditor6\Resources\appicon.svg" Link="Resources\appicon.svg" ForegroundFile="..\ExpressionMapEditor6\Resources\appiconfg.svg" IsAppIcon="true" Color="#512BD4" />
+
+		<!-- Splash Screen -->
+		<MauiSplashScreen Include="..\ExpressionMapEditor6\Resources\appiconfg.svg" Link="Resources\appiconfg.svg" Color="#512BD4" />
+
+		<!-- Images -->
+		<MauiImage Include="..\ExpressionMapEditor6\Resources\Images\*" Link="Resources\Images\%(Filename)%(Extension)" />
+
+		<!-- Custom Fonts -->
+		<MauiFont Include="..\ExpressionMapEditor6\Resources\Fonts\*" Link="Resources\Fonts\%(Filename)%(Extension)" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Include="..\ExpressionMapEditor6\**\*.cs" Exclude="..\ExpressionMapEditor6\bin\**;..\ExpressionMapEditor6\obj\**;..\ExpressionMapEditor6\Platforms\**" Link="%(RecursiveDir)%(Filename)%(Extension)" />
+		<MauiXaml Include="..\ExpressionMapEditor6\**\*.xaml" Exclude="..\ExpressionMapEditor6\bin\**;..\ExpressionMapEditor6\obj\**" Link="%(RecursiveDir)%(FileName)%(Extension)" />
+		<_ThisProjectStaticWebAsset Include="..\ExpressionMapEditor6\wwwroot\**" Link="wwwroot\%(RecursiveDir)%(Filename)%(Extension)" RelativePath="%(RecursiveDir)%(Filename)%(Extension)" />
+		<None Include="@(_ThisProjectStaticWebAsset)" />
+		<RazorComponent Include="..\ExpressionMapEditor6\**\*.razor" Exclude="..\ExpressionMapEditor6\bin\**;..\ExpressionMapEditor6\obj\**" Link="%(RecursiveDir)%(Filename)%(Extension)" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="6.0.0-preview.6.*" />
+		<PackageReference Include="Microsoft.ProjectReunion" Version="0.8.0" />
+		<PackageReference Include="Microsoft.ProjectReunion.Foundation" Version="0.8.0" />
+		<PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.8.0" />
+		<PackageReference Include="Microsoft.ProjectReunion.InteractiveExperiences" Version="0.8.0" NoWarn="NU1701" />
+		<PackageReference Include="MudBlazor" Version="5.0.15" />
+	</ItemGroup>
+
+</Project>

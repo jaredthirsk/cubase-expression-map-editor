@@ -1,0 +1,12 @@
+﻿table.Articulations {
+    background-color: blue;
+}
+
+tr.HasIssue {
+    background-color: red;
+    color: white;
+}
+
+.NameMismatch {
+    background-color: yellow;
+}
