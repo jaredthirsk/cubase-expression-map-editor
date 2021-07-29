@@ -22,5 +22,5 @@ That's it!  A lot more could be automated, and more error checks could be added,
 ## Known issues
 
  - If you remove all notes in an articulation and save, Cubase will only load part of the .expressionmap.  DATA LOSS!  The problem is Cubase doesn't load self-closing XML elements.  So there needs to be a search and replace of 
- <list name="obj" type="obj" /> with <list name="obj" type="obj"></list>, and then try loading again in Cubase and all the articulations should load.
+ `<list name="obj" type="obj" />` with `<list name="obj" type="obj"></list>`, and then try loading again in Cubase and all the articulations should load.
  
