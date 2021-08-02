@@ -7,11 +7,18 @@ namespace ExpressionMapEditor6
 {
 	public partial class App : Application
 	{
-		public App()
+		protected override Window CreateWindow(IActivationState activationState)
 		{
-			InitializeComponent();
-
-			MainPage = new MainPage();
+			var window = new Window(new MainPage());
+			//window.SetValue(Window.StyleProperty)
+			return window;
 		}
+
+		//public App()
+		//{
+		//	InitializeComponent();
+
+		//	MainPage = new MainPage();
+		//}
 	}
 }

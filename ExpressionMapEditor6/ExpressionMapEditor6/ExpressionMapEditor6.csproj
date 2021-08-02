@@ -24,7 +24,6 @@
 		<MauiImage Include="Resources\appicon.svg" ForegroundFile="Resources\appiconfg.svg" IsAppIcon="true" Color="#512BD4" />
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\appiconfg.svg" Color="#512BD4" />
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
@@ -34,8 +33,20 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiImage Remove="Resources\Images\SplashScreen.jpg" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiSplashScreen Include="Resources\Images\SplashScreen.jpg" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="6.0.0-preview.6.*" />
 		<PackageReference Include="MudBlazor" Version="5.0.15" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="Resources\appiconfg.svg" Color="#512BD4" />
 	</ItemGroup>
 
 	<PropertyGroup>

@@ -17,6 +17,27 @@ namespace ExpressionMapEditor6.Pages
 
     public partial class Index
     {
+        public int NumberOfNotesToTranspose { get; set; } = 12;
+        public string TransposeFromNote { get; set; } = "C";
+        public int TransposeFromNoteOctave { get; set; } = 1;
+        public string TransposeToNote { get; set; } = "C";
+        public int TransposeToNoteOctave { get; set; } = 5;
+        public async Task Transpose()
+        {
+            var startNote = new Note(TransposeFromNote, TransposeFromNoteOctave);
+            var endNote = new Note(TransposeToNote, TransposeToNoteOctave);
+            int delta = endNote.Value - startNote.Value;
+
+            var startNoteValue = startNote.Value;
+            var lastNoteValue = startNote.Value + NumberOfNotesToTranspose - 1;
+
+            foreach (var note in FilteredArticulations.SelectMany(a => a.Notes.Where(n => n.Value >= startNoteValue && n.Value <= lastNoteValue)))
+            {
+                note.Value += delta;
+            }
+            await OnChanged();
+        }
+
         public bool CheckAll
         {
             get => checkAll;
@@ -55,7 +76,7 @@ namespace ExpressionMapEditor6.Pages
         public List<string> CurrentGroupFilter = new(Enumerable.Repeat("(All)", 4));
 
         [Parameter]
-        public string SavePath { get; set; } = @"C:\src\cubase-expression-maps\VSL\SY Elite Strings\SYE Violins.expressionmap";
+        public string SavePath { get; set; } = @"C:\src\cubase-expression-maps\VSL\SY Elite Strings\SYE Cellos.expressionmap";
 
 
         public void FixAllNames()
@@ -238,8 +259,7 @@ namespace ExpressionMapEditor6.Pages
                     {
                         foreach (var message in messages.Elements())
                         {
-                            var note = message.Elements().Where(m => m.Attribute("name").Value == "data1").FirstOrDefault().Attribute("value").Value;
-                            a.Notes.Add(new Note(Convert.ToInt32(note)));
+                            a.Notes.Add(new Note(message.Elements().Where(m => m.Attribute("name").Value == "data1").FirstOrDefault()));
                         }
                     }
                 }

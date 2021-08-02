@@ -4,6 +4,10 @@
              xmlns:local="clr-namespace:ExpressionMapEditor6"
              x:Class="ExpressionMapEditor6.MainPage"
              BackgroundColor="{DynamicResource PageBackgroundColor}">
+             <!--WidthRequest="1000"
+             HeightRequest="1200"
+             MinimumHeightRequest="750"
+             MinimumWidthRequest="900"-->
 
     <b:BlazorWebView HostPage="wwwroot/index.html">
         <b:BlazorWebView.RootComponents>

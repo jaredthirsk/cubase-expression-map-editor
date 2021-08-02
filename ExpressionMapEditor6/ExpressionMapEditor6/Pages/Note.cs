@@ -1,9 +1,16 @@
 ﻿using System;
+using System.Xml.Linq;
 
 namespace ExpressionMapEditor6.Pages
 {
     public class Note
     {
+
+
+        public Note(XElement data1Element)
+        {
+            Data1Element = data1Element;
+        }
         public Note(int value)
         {
             Value = value;
@@ -16,7 +23,35 @@ namespace ExpressionMapEditor6.Pages
             Value = value;
         }
 
-        public int Value { get; }
+        //public int Value { get; set; }
+
+        public int Value
+        {
+            get
+            {
+                if (Data1Element != null)
+                {
+                    return Convert.ToInt32(Data1Element.Attribute("value").Value);
+                }
+                else
+                {
+                    return value;
+                }
+            }
+            set
+            {
+                if (Data1Element != null)
+                {
+                    Data1Element.SetAttributeValue("value", value.ToString());
+                    //var note = message.Elements().Where(m => m.Attribute("name").Value == "data1").FirstOrDefault().Attribute("value").Value;
+                }
+                else
+                {
+                    this.value = value;
+                }
+            }
+        }
+        private int value = 0;
 
         public static int NoteToNumber(string note) => note switch
         {
@@ -55,6 +90,7 @@ namespace ExpressionMapEditor6.Pages
                 _ => "",
             };
         }
+        public XElement Data1Element { get; }
 
         public static implicit operator Note(int value) => new Note(value);
 
