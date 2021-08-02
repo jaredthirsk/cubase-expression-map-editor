@@ -152,6 +152,8 @@ namespace ExpressionMapEditor6.Pages
         {
             Articulations.Clear();
 
+            if(!File.Exists(SavePath)) { return; }
+
             GroupVisuals = new List<HashSet<string>>(Enumerable.Range(0, 4).Select(i => new HashSet<string>(new string[] { "(All)" })));
 
             using var fs = new FileStream(SavePath, FileMode.Open);
