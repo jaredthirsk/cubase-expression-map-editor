@@ -123,7 +123,43 @@ namespace ExpressionMapEditor6.Pages
                     else if (!string.IsNullOrWhiteSpace(chunk) && !list.Contains(chunk)) { list.Add(chunk); }
                 }
 
+                if (list.Count == 0) { return ""; }
+
+                Move(list, "expressivo", 1);
+
+                if(list.Contains("sustain") && list.Contains("expressivo"))
+                {
+                    list.Remove("sustain");
+                    Move(list, "expressivo", 0);
+                }
+
+                if (list.Contains("crescendo") || list.Contains("dimuendo"))
+                {
+                    Move(list, "short", -1);
+                    Move(list, "long", -1);
+                }
+                //Move(list, "bold", 1);
+                //Move(list, "agile", 1);
+
+                list.Remove("normal");
+                if (list[0] == "staccato" || list[0] == "portato")
+                {
+                    list.Remove("long");
+                    Move(list, "short", 1);
+                }
+
                 return list.Aggregate((x, y) => $"{x} {y}");
+            }
+        }
+
+        private static void Move(List<string> list, string item, int index = 1)
+        {
+            if(index < 0) { index = Math.Max(0, list.Count + index); }
+
+            if (list.Contains(item) && list.Count > 1)
+            {
+                list.Remove(item);
+                list.Insert(index, item);
             }
         }
 
@@ -136,6 +172,16 @@ namespace ExpressionMapEditor6.Pages
 
                 case "long2":
                     return "long";
+
+                case "normal2":
+                    return "normal";
+                case "normal3":
+                    return "normal";
+                case "normal4":
+                    return "normal";
+
+                case "con fortissimo":
+                    return "con-ff";
 
                 #region Attack
 
@@ -152,7 +198,9 @@ namespace ExpressionMapEditor6.Pages
 
                 case "reg vibrato":
                     return "";
-
+                
+                case "con vibrato":
+                    return "con-v";
                 case "molto vibrato":
                     return "molto-v";
                 case "senza vibrato":
@@ -163,6 +211,10 @@ namespace ExpressionMapEditor6.Pages
                     return "senza/reg-v";
                 case "reg x molto":
                     return "reg/molto-v";
+
+                case "senza/con vibrato":
+                    return "senza/con-v";
+
 
                 #endregion
 

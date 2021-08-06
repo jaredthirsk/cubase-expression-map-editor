@@ -76,7 +76,7 @@ namespace ExpressionMapEditor6.Pages
         public List<string> CurrentGroupFilter = new(Enumerable.Repeat("(All)", 4));
 
         [Parameter]
-        public string SavePath { get; set; } = @"C:\src\cubase-expression-maps\VSL\SY Elite Strings\SYE Cellos.expressionmap";
+        public string SavePath { get; set; } = @"C:\src\cubase-expression-maps\VSL\SY Brass\SY Trumpet 1.expressionmap";
 
 
         public void FixAllNames()
@@ -240,17 +240,20 @@ namespace ExpressionMapEditor6.Pages
                     a.Visuals.Add(new Visual());
                 }
 
-                foreach (var visual in visuals)
+                if (visuals != null)
                 {
-                    var group = visual.Elements().Where(e => e.Attribute("name").Value == "group").FirstOrDefault();
-                    if (group == null) { continue; }
-                    int groupId = Convert.ToInt32(group.Attribute("value")?.Value ?? "-1");
-                    if (groupId == -1 || groupId >= 4) continue;
-                    a.Visuals[groupId].Text = visual.Elements().Where(e => e.Attribute("name").Value == "text").FirstOrDefault()?.Attribute("value").Value;
+                    foreach (var visual in visuals)
+                    {
+                        var group = visual.Elements().Where(e => e.Attribute("name").Value == "group").FirstOrDefault();
+                        if (group == null) { continue; }
+                        int groupId = Convert.ToInt32(group.Attribute("value")?.Value ?? "-1");
+                        if (groupId == -1 || groupId >= 4) continue;
+                        a.Visuals[groupId].Text = visual.Elements().Where(e => e.Attribute("name").Value == "text").FirstOrDefault()?.Attribute("value").Value;
 
-                    var hashSet = GroupVisuals[groupId];
-                    if (!hashSet.Contains(a.Visuals[groupId].Text)) { hashSet.Add(a.Visuals[groupId].Text); }
-                    a.Visuals[groupId].Description = visual.Elements().Where(e => e.Attribute("name").Value == "description").FirstOrDefault()?.Attribute("value").Value;
+                        var hashSet = GroupVisuals[groupId];
+                        if (!hashSet.Contains(a.Visuals[groupId].Text)) { hashSet.Add(a.Visuals[groupId].Text); }
+                        a.Visuals[groupId].Description = visual.Elements().Where(e => e.Attribute("name").Value == "description").FirstOrDefault()?.Attribute("value").Value;
+                    }
                 }
 
                 var action = x.Elements().Where(e => e.Attribute("class").Value == "PSlotMidiAction").FirstOrDefault();
