@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml.Linq;
 
-namespace ExpressionMapEditor6.Pages
+namespace ExpressionMapEditor
 {
     public class Note
     {

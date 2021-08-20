@@ -1,0 +1,238 @@
+﻿@namespace ExpressionMapEditor.Pages
+@page "/"
+@using System.Xml.Linq
+@using System.IO
+@using System.Collections
+
+<style>
+    tr.HasIssue {
+        background-color: red;
+        color: white;
+    }
+</style>
+<div style="display: flex; flex-direction: row;">
+    <MudInput @bind-Value="SavePath" Style="flex-grow: 1; min-width: 400px;" />
+    <div>
+        <MudButton @onclick=Load>Load</MudButton>
+        <MudButton @onclick=Save>Save</MudButton>
+    </div>
+</div>
+
+<MudTabs>
+    <MudTabPanel Text="Add Notes">
+        <div style="display: flex; flex-direction: row; border: 1px solid black; margin: 15px; width: fit-content;">
+            @foreach (var note in ScaleNotes)
+            {
+                @*<MudSelectItem Value="@note">@note</MudSelectItem>*@
+                <MudButton @onclick=@(()=>NoteToAdd = note) Style="@($"background-color: {(note == NoteToAdd ? "#ccf":"#fff")};")">
+                    @note
+                </MudButton>
+            }
+        </div>
+        <div style="display: flex; flex-direction: row; border: 1px solid black; margin: 15px; width: fit-content;">
+            <MudButtonGroup>
+                @foreach (var octave in Octaves)
+                {
+                    <MudButton @onclick=@(()=>NoteOctaveToAdd = octave) Style="@($"background-color: {(octave == NoteOctaveToAdd ? "#ccf":"#fff")};")">
+                        @octave
+                    </MudButton>
+                }
+            </MudButtonGroup>
+        </div>
+
+        <div style="display: flex; flex-direction: row; border: 1px solid black; margin: 15px; max-width: 700px;">
+            <MudSelect T="string" @bind-Value="NoteToAdd" Style="width: 200px;" Dense="true">
+                @foreach (var note in ScaleNotes)
+                {
+                    <MudSelectItem Value="@note">@note</MudSelectItem>
+                }
+            </MudSelect>
+
+            <MudSelect T="int" @bind-Value="NoteOctaveToAdd" Style="width: 250px;" Dense="true">
+                @foreach (var octave in Octaves)
+                {
+                    <MudSelectItem Value="@octave">@octave</MudSelectItem>
+                }
+            </MudSelect>
+            <MudButton @onclick=AddNote>Add Note</MudButton>
+        </div>
+    </MudTabPanel>
+
+
+    <MudTabPanel Text="Transpose">
+        <div>From:</div>
+        <div style="display: flex; flex-direction: row; border: 1px solid black; margin: 15px; max-width: 700px;">
+            <MudSelect T="string" @bind-Value="TransposeFromNote" Style="width: 200px;" Dense="true">
+                @foreach (var note in ScaleNotes)
+                {
+                    <MudSelectItem Value="@note">@note</MudSelectItem>
+                }
+            </MudSelect>
+
+            <MudSelect T="int" @bind-Value="TransposeFromNoteOctave" Style="width: 250px;" Dense="true">
+                @foreach (var octave in Octaves)
+                {
+                    <MudSelectItem Value="@octave">@octave</MudSelectItem>
+                }
+            </MudSelect>
+            <MudButton @onclick=AddNote>Add Note</MudButton>
+        </div>
+
+        <div>To:</div>
+        <div style="display: flex; flex-direction: row; border: 1px solid black; margin: 15px; max-width: 700px;">
+            <MudSelect T="string" @bind-Value="TransposeToNote" Style="width: 200px;" Dense="true">
+                @foreach (var note in ScaleNotes)
+                {
+                    <MudSelectItem Value="@note">@note</MudSelectItem>
+                }
+            </MudSelect>
+
+            <MudSelect T="int" @bind-Value="TransposeToNoteOctave" Style="width: 250px;" Dense="true">
+                @foreach (var octave in Octaves)
+                {
+                    <MudSelectItem Value="@octave">@octave</MudSelectItem>
+                }
+            </MudSelect>
+            <MudButton @onclick=AddNote>Add Note</MudButton>
+        </div>
+
+        <MudNumericField @bind-Value="NumberOfNotesToTranspose" Label="Number of notes to transpose" Variant="Variant.Text" Min="1" Max="200" />
+        <MudButton @onclick="Transpose">Transpose</MudButton>
+    </MudTabPanel>
+</MudTabs>
+
+
+<table class="Articulations">
+    <thead>
+        <tr>
+            <th><MudCheckBox @bind-Checked="CheckAll" /> </th>
+            <th>Articulation Name</th>
+            <th>
+
+                @if (Articulations.Where(a => !a.NameMatches).Any())
+                {
+                    <MudIconButton Icon="@Icons.Material.Filled.KeyboardArrowLeft" Size="Size.Small" Edge="Edge.Start" @onclick=FixAllNames></MudIconButton>
+                }
+
+            </th>
+            <th>Expected Name</th>
+            <th style="min-width: 100px;">Notes</th>
+
+            @*@for (int groupIndex = 0; groupIndex < 4; groupIndex++)
+                {
+                var group = GroupVisuals[groupIndex];
+                <th>
+                <span>@(1+groupIndex)</span>
+                <MudSelect T="string" @bind-Value="@CurrentGroupFilter[groupIndex]" SelectedValuesChanged="@SelectedValuesChanged">
+                @foreach (var v in group)
+                {
+                <MudSelectItem Value="@v">@v</MudSelectItem>
+                }
+                </MudSelect>
+                </th>
+                }*@
+
+            <th>
+                <span>1</span>
+                <MudSelect T="string" @bind-Value="@CurrentGroupFilter[0]" SelectedValuesChanged="@SelectedValuesChanged">
+                    @foreach (var v in GroupVisuals[0])
+                    {
+
+                        <MudSelectItem Value="@v">
+                            <div class="@(Articulations.Where(a => a.MissingNotes && a.Visuals.Where(av => av.Text == v).Any()).Any() ? "Error":"Ok")">
+                                @v
+                            </div>
+                        </MudSelectItem>
+                    }
+                </MudSelect>
+            </th>
+            <th>
+                <span>2</span>
+                <MudSelect T="string" @bind-Value="@CurrentGroupFilter[1]" SelectedValuesChanged="@SelectedValuesChanged">
+                    @foreach (var v in GroupVisuals[1])
+                    {
+                        <MudSelectItem Value="@v">
+                            <div class="@(Articulations.Where(a=>a.MissingNotes && a.Visuals.Where(av=>av.Text == v).Any()).Any() ? "Error":"")">
+                                @v
+                            </div>
+                        </MudSelectItem>
+                    }
+                </MudSelect>
+            </th>
+            <th>
+                <span>3</span>
+                <MudSelect T="string" @bind-Value="@CurrentGroupFilter[2]" SelectedValuesChanged="@SelectedValuesChanged">
+                    @foreach (var v in GroupVisuals[2])
+                    {
+                        <MudSelectItem Value="@v">
+                            <div class="@(Articulations.Where(a=>a.MissingNotes && a.Visuals.Where(av=>av.Text == v).Any()).Any() ? "Error":"")">
+                                @v
+                            </div>
+                        </MudSelectItem>
+                    }
+                </MudSelect>
+            </th>
+            <th>
+                <span>4</span>
+                <MudSelect T="string" @bind-Value="@CurrentGroupFilter[3]" SelectedValuesChanged="@SelectedValuesChanged">
+                    @foreach (var v in GroupVisuals[3])
+                    {
+                        <MudSelectItem Value="@v">
+                            <div class="@(Articulations.Where(a=>a.MissingNotes && a.Visuals.Where(av=>av.Text == v).Any()).Any() ? "Error":"")">
+                                @v
+                            </div>
+                        </MudSelectItem>
+                    }
+                </MudSelect>
+            </th>
+        </tr>
+    </thead>
+    @foreach (var articulation in FilteredArticulations)
+    {
+        <tr>
+            <td>
+                <MudCheckBox Dense="true" @bind-Checked="articulation.Checked" />
+            </td>
+            <td class="@(articulation.InvalidName ? "HasIssue" : "")">
+                @articulation.Name
+            </td>
+            <td>
+                @if (!articulation.NameMatches)
+                {
+                    <MudIconButton Icon="@Icons.Material.Filled.KeyboardArrowLeft" Size="Size.Small" Edge="Edge.Start" @onclick=@(e => articulation.Name = articulation.ExpectedName)></MudIconButton>
+                }
+            </td>
+            <td>
+                <div class="@(articulation.NameMatches ? "" : "NameMismatch")">
+                    @if (articulation.ExpectedName != articulation.Name)
+                    {
+                        @articulation.ExpectedName
+                    }
+                    else
+                    {
+                        <span>✓</span>
+                    }
+                </div>
+            </td>
+
+            <td class="@(articulation.MissingNotes ? "HasIssue" : "")">
+                @foreach (var note in articulation.Notes)
+                {
+                    <span style="margin-right: 5px;">
+                        <MudButton Dense="true" @onclick=@(() => RemoveNote(articulation, note))>
+                            @note
+                        </MudButton>
+                    </span>
+                }
+            </td>
+
+            @for (int i = 0; i < 4; i++)
+            {
+                <td title="@articulation.Visuals[i].Description">@articulation.Visuals[i].Text</td>
+            }
+
+        </tr>
+    }
+</table>
+
+

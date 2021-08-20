@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ExpressionMapEditor7.WinUI": {
+      "commandName": "MsixPackage",
+      "nativeDebugging": false
+    }
+  }
+}

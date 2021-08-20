@@ -5,20 +5,18 @@ using Microsoft.Maui.Hosting;
 using Microsoft.Maui.Controls.Compatibility;
 using Microsoft.Maui.Controls.Hosting;
 using Microsoft.Maui.Controls.Xaml;
-using MudBlazor.Services;
+using ExpressionMapEditor7.Data;
 
 [assembly: XamlCompilationAttribute(XamlCompilationOptions.Compile)]
 
-namespace ExpressionMapEditor6
+namespace ExpressionMapEditor7
 {
 	public class Startup : IStartup
 	{
 		public void Configure(IAppHostBuilder appBuilder)
 		{
 			appBuilder
-				//.RegisterBlazorMauiWebView<Startup>(new Startup())
-				.RegisterBlazorMauiWebView<IAppHostBuilder>()
-				//.RegisterBlazorMauiWebView(typeof(Startup).Assembly)
+				.RegisterBlazorMauiWebView()
 				.UseMicrosoftExtensionsServiceProviderFactory()
 				.UseMauiApp<App>()
 				.ConfigureFonts(fonts =>
@@ -27,8 +25,8 @@ namespace ExpressionMapEditor6
 				})
 				.ConfigureServices(services =>
 				{
-					services.AddMudServices();
 					services.AddBlazorWebView();
+					services.AddSingleton<WeatherForecastService>();
 				});
 		}
 	}
