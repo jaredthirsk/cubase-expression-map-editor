@@ -78,7 +78,10 @@ namespace ExpressionMapEditor.Pages
 
         [Parameter]
         //public string SavePath { get; set; } = @"C:\src\cubase-expression-maps\VSL\SY Brass\SY Trumpet 1.expressionmap";
-        public string SavePath { get; set; } = @"C:\src\cubase-expression-maps\VSL\SY Elite Strings\SYE Violins and Violas.expressionmap";
+        //public string SavePath { get; set; } = @"C:\src\cubase-expression-maps\VSL\SY Elite Strings\SYE Violins and Violas.expressionmap";
+        //public string SavePath { get; set; } = @"C:\src\cubase-expression-maps\VSL\SY Elite Strings\SYE Double basses.expressionmap";
+        //public string SavePath { get; set; } = @"C:\src\cubase-expression-maps\VSL\SYd Woodwinds\SYd Alto flute.expressionmap";
+        public string SavePath { get; set; } = @"C:\src\cubase-expression-maps\VSL\SY Drums\SY Roto Toms.expressionmap";
 
         public void FixAllNames()
         {
@@ -279,6 +282,7 @@ namespace ExpressionMapEditor.Pages
             Articulations = articulations;
             Change = new EventCallback(null, new Action(() => OnChange(null, null)));
 
+            //CloneArticulations();
             //CloneNotes();
             StateHasChanged();
         }
@@ -311,7 +315,7 @@ namespace ExpressionMapEditor.Pages
 
                 var destNode = dest.Document.XElement.Descendants("member").Where(o => o.Attribute("name").Value == "midiMessages").FirstOrDefault();
 
-                Debug.WriteLine(destNode);
+                Debug.WriteLine($"Copying {source.Name} to {dest.Name}");
 
                 destNode.Add(XElement.Parse(list));
             }
@@ -320,15 +324,17 @@ namespace ExpressionMapEditor.Pages
 
     private void CloneArticulations() // HARDCODED
     {
-        foreach (var a in Articulations.ToArray().Where(a => a.Visuals.Count > 0 && a.Visuals[0].Text == "legato"))
+        foreach (var a in Articulations.ToArray().Where(a => a.Visuals.Count > 0 
+        //&& a.Visuals[0].Text == "legato"
+        ))
         {
-            a.Notes.Add(new Note("A#", 1));
+            //a.Notes.Add(new Note("A#", 1));
             var notes = new List<Note>(a.Notes);
-            notes[notes.Count - 1] = new Note("B", 1);
+            //notes[notes.Count - 1] = new Note("B", 1);
             var visuals = new List<Visual>(a.Visuals);
-            visuals[0] = new Visual { Description = "slur", Text = "slur" };
+            //visuals[0] = new Visual { Description = "slur", Text = "slur" };
 
-            Articulations.Add(Articulation.CloneFrom(a, RootElement.Document, a.Name.Replace("legato", "slur")));
+            Articulations.Add(Articulation.CloneFrom(a, RootElement.Document, a.Name + " marcato-xf"));
         }
     }
 

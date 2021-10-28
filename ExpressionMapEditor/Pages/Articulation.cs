@@ -481,6 +481,14 @@ namespace ExpressionMapEditor
 
                 #endregion
 
+                case "no piccolo":
+                case "without piccolo":
+                case "senza piccolo":
+                    return "";
+
+                case "piccolo":
+                    return "+piccolo";
+
                 default:
                     return s.Text;
             }
