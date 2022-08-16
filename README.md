@@ -18,7 +18,7 @@ There's no binary.  So open this in Visual Studio 2022 Preview (free download) o
 
 1. In Editor: In the header row, click the Left chevron to assign all recommended names to overwrite Slot 1, Slot 2, etc. (ignores checkboxes), or click the left chevron for each row you wish to use an auto-generated name for.  (To tweak auto-generated names, edit the code.)
 
-    ### Feature: Articulation naming
+    ### Feature: Add note to multiple articulations
 
 1. In Editor: Filter the list of articulations using the header row dropdown lists.  Check all articulations you wish to edit, or click the checkbox in the header row to select/deselect all.  Then click a note combo, such as B-2, and click Add Note.  This will add that note to all the selected visible articulations.  Things are auto-saved
 1. In Editor: click a note if you wish to remove it.  (See Known issues when deleting all notes.)
